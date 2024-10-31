@@ -1,0 +1,33 @@
+name: Generate Blog Posts
+
+on:
+  schedule:
+    - cron: '0 0,8,16 * * *'  # Runs at 00:00, 08:00, and 16:00 UTC
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Generate blog post
+        run: npm run generate
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name 'AI Blog Generator'
+          git config --global user.email 'ai-bot@example.com'
+          git add .
+          git commit -m "Add generated blog post" || exit 0
+          git push

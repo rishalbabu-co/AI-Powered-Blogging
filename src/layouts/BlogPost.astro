@@ -1,0 +1,17 @@
+---
+import Layout from './Layout.astro';
+
+const { frontmatter } = Astro.props;
+---
+
+<Layout title={frontmatter.title}>
+  <article class="max-w-3xl mx-auto px-4 py-8">
+    <h1 class="text-4xl font-bold mb-4">{frontmatter.title}</h1>
+    <div class="text-gray-400 mb-8">
+      {new Date(frontmatter.pubDate).toLocaleDateString()}
+    </div>
+    <div class="prose prose-invert max-w-none">
+      <slot />
+    </div>
+  </article>
+</Layout>
